@@ -40,4 +40,7 @@ final class Service
 
     /** @var boolean */
     public $abstract;
+    
+    /** @var string */
+    public $useParameterForClass;
 }

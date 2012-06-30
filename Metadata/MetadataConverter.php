@@ -34,7 +34,8 @@ class MetadataConverter
     public function convert(ClassHierarchyMetadata $metadata)
     {
         static $count = 0;
-        $definitions = array();
+        $serviceDefinitions = array();
+        $parameterDefinitions = array();
 
         $previous = null;
         foreach ($metadata->classMetadata as $classMetadata) {
@@ -75,11 +76,17 @@ class MetadataConverter
 
                 $definition->setInitMethod($classMetadata->initMethod);
             }
+            
+            if ($classMetadata->useParameterForClass) {
+                $classParamName = $classMetadata->id . ".class";
+                $parameterDefinitions[$classParamName] = $classMetadata->name;
+                $definition->setClass("%${classParamName}%");
+            }
 
-            $definitions[$classMetadata->id] = $definition;
+            $serviceDefinitions[$classMetadata->id] = $definition;
             $previous = $classMetadata;
         }
 
-        return $definitions;
+        return array($serviceDefinitions,$parameterDefinitions);
     }
 }

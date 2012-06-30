@@ -67,7 +67,14 @@ class AnnotationConfigurationPass implements CompilerPassInterface
                 continue;
             }
 
-            foreach ($converter->convert($metadata) as $id => $definition) {
+            list($serviceDefs, $paramDefs) = $converter->convert($metadata);
+
+            foreach ($paramDefs as $id => $definition) {
+                if(!$container->hasParameter($id)) {
+                    $container->setParameter($id, $definition);
+                }
+            }
+            foreach ($serviceDefs as $id => $definition) {
                 $container->setDefinition($id, $definition);
             }
         }
